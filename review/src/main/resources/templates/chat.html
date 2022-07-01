@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+    <form th:action="@{'/chat'}" th:object="${newChatForm}" action="#" method="POST">
+        <label for="username">Username:</label>
+        <input id="username" type="text" th:field="*{username}">
+        <label for="messageText">Message Text:</label>
+        <input id="messageText" type="text" th:field="*{messageText}">
+        <label for="messageType">Message Type: </label>
+        <select id="messageType" th:field="*{messageType}">
+            <option th:value="${T(com.udacity.jwdnd.c1.review.MessageType).SAY}" selected>Say</option>
+            <option th:value="${T(com.udacity.jwdnd.c1.review.MessageType).SHOUT}">Shout</option>
+            <option th:value="${T(com.udacity.jwdnd.c1.review.MessageType).WHISPER}">Whisper</option>
+        </select>
+        <input type="submit">
+    </form>
+    <h2 th:each="chatMessage : ${messageList}"
+        th:text="${chatMessage.toString()}"
+        th:unless="${#strings.containsIgnoreCase(chatMessage.getText(),'fuck')}">chatMessage</h2>
+</body>
+</html>
