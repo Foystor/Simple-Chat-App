@@ -1,5 +1,7 @@
-package com.udacity.jwdnd.c1.review;
+package com.udacity.jwdnd.c1.review.controller;
 
+import com.udacity.jwdnd.c1.review.model.ChatForm;
+import com.udacity.jwdnd.c1.review.service.MessageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +27,14 @@ public class ChatController {
 
     @PostMapping
     public String addChat(@ModelAttribute("newChatForm") ChatForm newChatForm, Model model) {
-        messageService.addMessage(newChatForm.getUsername(), newChatForm.getMessageText(), newChatForm.getMessageType());
+        messageService.addMessage(newChatForm);
+        newChatForm.setMessageText("");
         model.addAttribute("messageList",messageService.getMessageList());
         return "chat";
+    }
+
+    @ModelAttribute("allMessageTypes")
+    public String[] allMessageTypes() {
+        return new String[]{"Say", "Shout", "Whisper"};
     }
 }

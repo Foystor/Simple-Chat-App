@@ -1,19 +1,9 @@
-package com.udacity.jwdnd.c1.review;
+package com.udacity.jwdnd.c1.review.model;
 
 public class ChatMessage {
 
     private String username;
     private String text;
-
-    public ChatMessage(String username, String text) {
-        this.username = username;
-        this.text = text;
-    }
-
-    @Override
-    public String toString() {
-        return  username + ": " + text;
-    }
 
     public String getUsername() {
         return username;
