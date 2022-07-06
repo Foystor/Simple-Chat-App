@@ -6,8 +6,8 @@
 </head>
 <body>
     <form th:action="@{'/chat'}" th:object="${newChatForm}" action="#" method="POST">
-        <label for="username">Username:</label>
-        <input id="username" type="text" th:field="*{username}">
+<!--        <label for="username">Username:</label>-->
+<!--        <input id="username" type="text" th:field="*{username}">-->
         <label for="messageText">Message Text:</label>
         <input id="messageText" type="text" th:field="*{messageText}">
         <label for="messageType">Message Type: </label>
@@ -19,8 +19,9 @@
         </select>
         <input type="submit">
     </form>
+    <a href="logout">Logout</a>
     <div th:each="chatMessage : ${messageList}">
-        <span th:text="${chatMessage.username}">username</span>: <span th:text="${chatMessage.text}">msg</span>
+        <span th:text="${chatMessage.getUsername()}">username</span>: <span th:text="${chatMessage.getMessagetext()}">msg</span>
     </div>
 </body>
 </html>
