@@ -21,7 +21,7 @@
     </form>
     <a href="logout">Logout</a>
     <div th:each="chatMessage : ${messageList}">
-        <span th:text="${chatMessage.getUsername()}">username</span>: <span th:text="${chatMessage.getMessagetext()}">msg</span>
+        <span th:text="${chatMessage.getUsername()}">username</span>: <span th:text="${chatMessage.getMessageText()}">msg</span>
     </div>
 </body>
 </html>

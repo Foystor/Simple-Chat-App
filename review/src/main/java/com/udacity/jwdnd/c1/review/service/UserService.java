@@ -32,8 +32,7 @@ public class UserService {
         return userMapper.insert(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getFirstname(), user.getLastname()));
     }
 
-    public String getCurrentUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName();
+    public User getUser(String username) {
+        return userMapper.getUser(username);
     }
 }
