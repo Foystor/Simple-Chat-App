@@ -17,11 +17,11 @@
                     th:value="${type}"
                     th:text="${type}">Say</option>
         </select>
-        <input type="submit">
+        <input id="submit" type="submit">
     </form>
-    <a href="logout">Logout</a>
+    <a id="logout_link" href="logout">Logout</a>
     <div th:each="chatMessage : ${messageList}">
-        <span th:text="${chatMessage.getUsername()}">username</span>: <span th:text="${chatMessage.getMessageText()}">msg</span>
+        <span class="username" th:text="${chatMessage.getUsername()}">username</span>: <span class="message" th:text="${chatMessage.getMessageText()}">msg</span>
     </div>
 </body>
 </html>
