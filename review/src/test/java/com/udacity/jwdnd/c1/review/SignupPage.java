@@ -21,38 +21,15 @@ public class SignupPage {
     @FindBy(id = "submit-button")
     private WebElement signupBtn;
 
-    @FindBy(id = "login_link")
-    private WebElement loginLink;
-
     public SignupPage(WebDriver driver) {
         PageFactory.initElements(driver,this);
     }
 
-    public void inputFirstname(String firstname) {
-        firstnameField.clear();
+    public void signup(String firstname, String lastname, String username, String password) {
         firstnameField.sendKeys(firstname);
-    }
-
-    public void inputLastname(String lastname) {
-        lastnameField.clear();
         lastnameField.sendKeys(lastname);
-    }
-
-    public void inputUsername(String username) {
-        usernameField.clear();
         usernameField.sendKeys(username);
-    }
-
-    public void inputPassword(String password) {
-        passwordField.clear();
         passwordField.sendKeys(password);
-    }
-
-    public void signup() {
         signupBtn.click();
-    }
-
-    public void toLogin() {
-        loginLink.click();
     }
 }

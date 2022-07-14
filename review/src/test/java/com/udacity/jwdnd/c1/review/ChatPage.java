@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.c1.review;
 
+import com.udacity.jwdnd.c1.review.model.ChatMessage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,13 +17,13 @@ public class ChatPage {
     @FindBy(id = "messageType")
     private WebElement messageTypeSelect;
 
-    @FindBy(id = "submit")
+    @FindBy(id = "submit_btn")
     private WebElement submitBtn;
 
-    @FindBy(className = "username")
+    @FindBy(className = "chatMessageUsername")
     private List<WebElement> usernameDisplay;
 
-    @FindBy(className = "message")
+    @FindBy(className = "chatMessageText")
     private List<WebElement> msgDisplay;
 
     @FindBy(id = "logout_link")
@@ -32,34 +33,22 @@ public class ChatPage {
         PageFactory.initElements(driver,this);
     }
 
-    public void inputMessage(String msg) {
-        messageTextField.clear();
+    public void sendChatMessage(String msg, String msgType) {
         messageTextField.sendKeys(msg);
-    }
-
-    public void selectMessageType(String type) {
         Select select = new Select(messageTypeSelect);
-        select.selectByValue(type);
-    }
-
-    public void submitMsg() {
+        select.selectByValue(msgType);
         submitBtn.click();
     }
 
-    public List<String> getDisplayedUsername() {
-        List<String> displayedUsername = new ArrayList<>();
-        for (WebElement nameDisplay : usernameDisplay) {
-            displayedUsername.add(nameDisplay.getText());
+    public List<ChatMessage> getMessages() {
+        List<ChatMessage> results = new ArrayList<>();
+        for (int i = 0; i < usernameDisplay.size(); i++) {
+            ChatMessage result = new ChatMessage();
+            result.setUsername(usernameDisplay.get(i).getText());
+            result.setMessageText(msgDisplay.get(i).getText());
+            results.add(result);
         }
-        return displayedUsername;
-    }
-
-    public List<String> getDisplayedMsg() {
-        List<String> displayedMsg = new ArrayList<>();
-        for (WebElement msgDisplay : msgDisplay) {
-            displayedMsg.add(msgDisplay.getText());
-        }
-        return displayedMsg;
+        return results;
     }
 
     public void logout() {

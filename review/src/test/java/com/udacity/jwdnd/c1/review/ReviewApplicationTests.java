@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.c1.review;
 
+import com.udacity.jwdnd.c1.review.model.ChatMessage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,9 +21,7 @@ class ReviewApplicationTests {
 	private Integer port;
 
 	private static WebDriver driver;
-	private LoginPage loginPage;
-	private SignupPage signupPage;
-	private ChatPage chatPage;
+	private String baseURL;
 
 	@BeforeAll
 	public static void beforeAll() {
@@ -33,88 +32,77 @@ class ReviewApplicationTests {
 	@AfterAll
 	public static void afterAll() {
 		driver.quit();
+		driver = null;
 	}
 
 	@BeforeEach
 	public void beforeEach() {
-		driver.get("http://localhost:" + port + "/login");
-		loginPage = new LoginPage(driver);
-		signupPage = new SignupPage(driver);
-		chatPage = new ChatPage(driver);
+		baseURL = "http://localhost:" + port;
 	}
 
-	void signupUser(String username) {
-		String firstname = "firstname";
-		String lastname = "lastname";
-		String password = "1";
-
-		driver.get("http://localhost:" + port + "/signup");
-		signupPage.inputFirstname(firstname);
-		signupPage.inputLastname(lastname);
-		signupPage.inputUsername(username);
-		signupPage.inputPassword(password);
-		signupPage.signup();
+	void signupUser(String username, String password) {
+		driver.get(baseURL + "/signup");
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.signup("first","last", username, password);
 	}
 
-	void loginUser(String username) {
-		String password = "1";
-
-		driver.get("http://localhost:" + port + "/login");
-		loginPage.inputUsername(username);
-		loginPage.inputPassword(password);
-		loginPage.login();
+	void loginUser(String username, String password) {
+		driver.get(baseURL + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username, password);
 	}
 
 	@Test
 	void singleUser_signupAndLoginAndChat_usernameAndMsgCorrect() {
 		String username = "Foy";
+		String password = "password";
 		String msg = "Hello";
 		String msgType = "Shout";
 
-		signupUser(username);
-		loginUser(username);
-
-		// chat
-		chatPage.inputMessage(msg);
-		chatPage.selectMessageType(msgType);
-		chatPage.submitMsg();
+		signupUser(username, password);
+		loginUser(username, password);
+		ChatPage chatPage = new ChatPage(driver);
+		chatPage.sendChatMessage(msg, msgType);
 
 		// verify
-		assertEquals(username,chatPage.getDisplayedUsername().get(0));
-		assertEquals(msg.toUpperCase(),chatPage.getDisplayedMsg().get(0));
+		ChatMessage firstMsg = chatPage.getMessages().get(0);
+		assertEquals(username, firstMsg.getUsername());
+		assertEquals(msg.toUpperCase(), firstMsg.getMessageText());
 	}
 
 	@Test
 	void twoUsers_signupAndLoginAndChat_displaySameMsgs() {
 		String username1 = "Foy";
+		String username2 = "Cruella";
+		String password = "password";
 		String msg1 = "Yahoo!";
 		String msgType1 = "Shout";
-		String username2 = "Cruella";
 		String msg2 = "Aha";
 		String msgType2 = "Whisper";
 
-		signupUser(username1);
-		loginUser(username1);
-		chatPage.inputMessage(msg1);
-		chatPage.selectMessageType(msgType1);
+		// user1
+		signupUser(username1,password);
+		loginUser(username1,password);
+		ChatPage chatPage = new ChatPage(driver);
+		chatPage.sendChatMessage(msg1, msgType1);
 		chatPage.logout();
 
-		signupUser(username2);
-		loginUser(username2);
-		chatPage.inputMessage(msg2);
-		chatPage.selectMessageType(msgType2);
-		// get messages
-		List<String> usernames2 = chatPage.getDisplayedUsername();
-		List<String> msgs2 = chatPage.getDisplayedMsg();
-		chatPage.logout();
+		// user2
+		signupUser(username2, password);
+		loginUser(username2, password);
+		chatPage = new ChatPage(driver);
+		chatPage.sendChatMessage(msg2, msgType2);
 
-		loginUser(username1);
 		// get messages
-		List<String> usernames1 = chatPage.getDisplayedUsername();
-		List<String> msgs1 = chatPage.getDisplayedMsg();
+		List<ChatMessage> messages2 = chatPage.getMessages();
+		chatPage.logout();
+		loginUser(username1, password);
+		List<ChatMessage> messages1 = chatPage.getMessages();
 
 		// verify
-		assertIterableEquals(usernames1,usernames2);
-		assertIterableEquals(msgs1,msgs2);
+		for (int i = 0; i < messages1.size(); i++) {
+			assertEquals(messages1.get(i).getUsername(), messages2.get(i).getUsername());
+			assertEquals(messages1.get(i).getMessageText(), messages2.get(i).getMessageText());
+		}
 	}
 }
