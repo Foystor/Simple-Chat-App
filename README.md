@@ -10,7 +10,7 @@ Additionally, users should be able to select a message "mode": either `Say`, `Sh
 
 ## Demo
 
-
+https://user-images.githubusercontent.com/74621252/187640198-c91f409e-e048-4e47-b5a8-499fbb77623f.mov
 
 ## Technologies
 
